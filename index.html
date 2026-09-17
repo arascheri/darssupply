@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARS SUPPLY - Catálogo Digital</title>
+    <title>DARS SUPPLY - Catálogo Digital con Carrito</title>
     <!-- Iconos Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Librerías para Generar PDF en el Navegador -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         /* --- RESET Y VARIABLES --- */
         :root {
@@ -13,6 +17,8 @@
             --primary-light: #1E293B;  /* Azul Marino Medio */
             --accent-green: #25D366;   /* Verde WhatsApp */
             --accent-green-hover: #1EBE5B;
+            --danger: #EF4444;         /* Rojo Anular/Eliminar */
+            --danger-hover: #DC2626;
             --bg-light: #F8FAFC;
             --white: #FFFFFF;
             --text-dark: #0F172A;
@@ -33,7 +39,7 @@
         body {
             background-color: var(--bg-light);
             color: var(--text-dark);
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
         a {
@@ -80,7 +86,7 @@
             color: var(--white);
         }
 
-        .btn-header-wa {
+        .btn-header-cart {
             background-color: var(--accent-green);
             color: var(--white);
             padding: 0.6rem 1.2rem;
@@ -90,12 +96,24 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            border: none;
+            position: relative;
             transition: all 0.3s ease;
         }
 
-        .btn-header-wa:hover {
+        .btn-header-cart:hover {
             background-color: var(--accent-green-hover);
             transform: translateY(-2px);
+        }
+
+        .cart-badge {
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-weight: bold;
         }
 
         /* --- NAVEGACIÓN POR CATEGORÍAS --- */
@@ -135,12 +153,12 @@
             color: var(--accent-green);
         }
 
-        /* --- BOTÓN FLOTANTE DE WHATSAPP --- */
-        .btn-float-wa {
+        /* --- BOTÓN FLOTANTE CARRITO --- */
+        .btn-float-cart {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: var(--accent-green);
+            background-color: var(--primary);
             color: var(--white);
             width: 60px;
             height: 60px;
@@ -149,13 +167,30 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 999;
+            z-index: 99;
+            cursor: pointer;
+            border: 2px solid var(--accent-green);
             transition: all 0.3s ease;
         }
 
-        .btn-float-wa:hover {
+        .btn-float-cart:hover {
             transform: scale(1.1);
-            background-color: var(--accent-green-hover);
+        }
+
+        .float-cart-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: var(--accent-green);
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
@@ -167,7 +202,7 @@
 
         .category-section {
             margin-bottom: 3.5rem;
-            scroll-margin-top: 130px; /* Offset para el header pegajoso */
+            scroll-margin-top: 130px;
         }
 
         .category-title {
@@ -276,10 +311,10 @@
             color: #15803D;
         }
 
-        .btn-card-wa {
-            background-color: var(--accent-green);
+        .btn-add-cart {
+            background-color: var(--primary);
             color: var(--white);
-            text-align: center;
+            border: none;
             padding: 0.7rem;
             border-radius: 8px;
             font-weight: 700;
@@ -288,11 +323,235 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
             transition: background-color 0.2s ease;
         }
 
-        .btn-card-wa:hover {
+        .btn-add-cart:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* --- MODAL DEL CARRITO --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .cart-item-price {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .cart-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-qty {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-val {
+            font-size: 0.9rem;
+            font-weight: 700;
+            width: 20px;
+            text-align: center;
+        }
+
+        .btn-remove-item {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .cart-summary {
+            background-color: #F8FAFC;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .summary-total {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-top: 2px solid var(--border-color);
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-light);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-cancel {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-cancel:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-process {
+            background-color: var(--accent-green);
+            color: var(--white);
+        }
+
+        .btn-process:hover {
             background-color: var(--accent-green-hover);
+        }
+
+        /* --- VISTA PREVIA PDF Y ENVIAR WHATSAPP --- */
+        .process-step-2 {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pdf-preview-box {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .pdf-header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .pdf-table th, .pdf-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 6px 4px;
+            text-align: left;
+        }
+
+        .pdf-table th {
+            color: var(--primary);
+            font-weight: 700;
         }
 
         /* --- FOOTER --- */
@@ -315,10 +574,11 @@
                 <img src="logo.png" alt="DARS SUPPLY Logo" onerror="this.style.display='none'">
                 <span class="brand-title">DARS SUPPLY</span>
             </div>
-            <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quisiera%20más%20información" target="_blank" class="btn-header-wa">
-                <i data-lucide="message-circle"></i>
-                <span>Atención WhatsApp</span>
-            </a>
+            <button class="btn-header-cart" onclick="openCartModal()">
+                <i data-lucide="shopping-cart"></i>
+                <span>Carrito</span>
+                <span class="cart-badge" id="header-cart-count">0</span>
+            </button>
         </div>
     </header>
 
@@ -332,10 +592,11 @@
         </div>
     </nav>
 
-    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-    <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quisiera%20consultar%20el%20catálogo" target="_blank" class="btn-float-wa" title="Escríbenos por WhatsApp">
-        <i data-lucide="message-circle" style="width: 32px; height: 32px;"></i>
-    </a>
+    <!-- BOTÓN FLOTANTE DE CARRITO -->
+    <div class="btn-float-cart" onclick="openCartModal()" title="Ver Carrito">
+        <i data-lucide="shopping-cart" style="width: 28px; height: 28px;"></i>
+        <span class="float-cart-badge" id="float-cart-count">0</span>
+    </div>
 
     <!-- CATÁLOGO DE PRODUCTOS -->
     <main class="main-container">
@@ -352,14 +613,14 @@
                     <img src="producto1.jpg" alt="Producto Hogar 1" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 1</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%201" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 1', 10.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -368,14 +629,14 @@
                     <img src="producto2.jpg" alt="Producto Hogar 2" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 2</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%202" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 2', 15.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -384,14 +645,14 @@
                     <img src="producto3.jpg" alt="Producto Hogar 3" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 3</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%203" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 3', 12.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -400,14 +661,14 @@
                     <img src="producto4.jpg" alt="Producto Hogar 4" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 4</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$20.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$16.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%204" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -416,14 +677,14 @@
                     <img src="producto5.jpg" alt="Producto Hogar 5" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 5</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%205" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 5', 8.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -432,14 +693,14 @@
                     <img src="producto6.jpg" alt="Producto Hogar 6" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 6</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%206" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 6', 14.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -448,14 +709,14 @@
                     <img src="producto7.jpg" alt="Producto Hogar 7" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 7</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%207" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 7', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -464,14 +725,14 @@
                     <img src="producto8.jpg" alt="Producto Hogar 8" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Hogar 8</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Hogar%208" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 8', 25.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -491,14 +752,14 @@
                     <img src="producto9.jpg" alt="Producto Tecnología 9" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 9</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%209" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 9', 15.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -507,14 +768,14 @@
                     <img src="producto10.jpg" alt="Producto Tecnología 10" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 10</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$18.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2010" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -523,14 +784,14 @@
                     <img src="producto11.jpg" alt="Producto Tecnología 11" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 11</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$30.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$24.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2011" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 11', 30.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -539,14 +800,14 @@
                     <img src="producto12.jpg" alt="Producto Tecnología 12" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 12</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2012" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 12', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -555,14 +816,14 @@
                     <img src="producto13.jpg" alt="Producto Tecnología 13" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 13</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$10.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2013" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 13', 12.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -571,14 +832,14 @@
                     <img src="producto14.jpg" alt="Producto Tecnología 14" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 14</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2014" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 14', 25.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -587,14 +848,14 @@
                     <img src="producto15.jpg" alt="Producto Tecnología 15" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 15</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$40.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$32.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2015" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 15', 40.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -603,14 +864,14 @@
                     <img src="producto16.jpg" alt="Producto Tecnología 16" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Tecnología 16</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Tecnología%2016" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 16', 16.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -630,14 +891,14 @@
                     <img src="producto17.jpg" alt="Producto Cabello 17" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 17</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2017" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 17', 19.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -646,14 +907,14 @@
                     <img src="producto18.jpg" alt="Producto Cabello 18" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 18</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2018" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 18', 14.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -662,14 +923,14 @@
                     <img src="producto19.jpg" alt="Producto Cabello 19" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 19</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$17.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2019" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 19', 22.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -678,14 +939,14 @@
                     <img src="producto20.jpg" alt="Producto Cabello 20" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 20</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$7.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2020" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 20', 10.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -694,14 +955,14 @@
                     <img src="producto21.jpg" alt="Producto Cabello 21" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 21</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$28.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$22.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2021" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 21', 28.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -710,14 +971,14 @@
                     <img src="producto22.jpg" alt="Producto Cabello 22" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 22</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2022" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 22', 16.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -726,14 +987,14 @@
                     <img src="producto23.jpg" alt="Producto Cabello 23" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 23</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2023" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 23', 12.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -742,14 +1003,14 @@
                     <img src="producto24.jpg" alt="Producto Cabello 24" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Cabello 24</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$35.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$28.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Cabello%2024" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 24', 35.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -769,14 +1030,14 @@
                     <img src="producto25.jpg" alt="Producto Útiles Escolares 25" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 25</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$11.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2025" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 25', 11.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -785,14 +1046,14 @@
                     <img src="producto26.jpg" alt="Producto Útiles Escolares 26" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 26</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2026" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 26', 19.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -801,14 +1062,14 @@
                     <img src="producto27.jpg" alt="Producto Útiles Escolares 27" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 27</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2027" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 27', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -817,14 +1078,14 @@
                     <img src="producto28.jpg" alt="Producto Útiles Escolares 28" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 28</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$5.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$3.50</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2028" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 28', 5.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -833,14 +1094,14 @@
                     <img src="producto29.jpg" alt="Producto Útiles Escolares 29" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 29</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2029" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 29', 8.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -849,14 +1110,14 @@
                     <img src="producto30.jpg" alt="Producto Útiles Escolares 30" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 30</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2030" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 30', 12.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -865,14 +1126,14 @@
                     <img src="producto31.jpg" alt="Producto Útiles Escolares 31" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Producto Útiles Escolares 31</h3>
-                        <p class="product-description">Descripción breve del útil escolar. Puedes editar este texto fácilmente.</p>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$0.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$0.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
                         </div>
-                        <a href="https://wa.me/584226902371?text=Hola%20DARS%20SUPPLY,%20quiero%20hacer%20un%20pedido%20del%20producto%20Producto%20Útiles%20Escolares%2031" target="_blank" class="btn-card-wa">
-                            <i data-lucide="shopping-bag"></i> Pedir por WhatsApp
-                        </a>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 31', 15.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
                     </div>
                 </article>
 
@@ -882,14 +1143,272 @@
 
     </main>
 
+    <!-- MODAL DEL CARRITO -->
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title"><i data-lucide="shopping-cart"></i> Mi Carrito de Compras</span>
+                <button class="close-modal" onclick="closeCartModal()"><i data-lucide="x"></i></button>
+            </div>
+
+            <!-- PASO 1: LISTADO DE PRODUCTOS EN CARRITO -->
+            <div class="modal-body" id="cart-step-1">
+                <div id="cart-items-container">
+                    <!-- Los productos se inyectan dinámicamente con JS -->
+                </div>
+
+                <div class="cart-summary" id="cart-summary-box" style="display: none;">
+                    <div class="summary-row">
+                        <span>Total de Piezas / Unidades:</span>
+                        <strong id="summary-pieces">0</strong>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total a Pagar:</span>
+                        <strong id="summary-total">$0.00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" id="cart-footer-1">
+                <button class="btn-action btn-cancel" onclick="cancelCart()">
+                    <i data-lucide="trash-2"></i> Anular
+                </button>
+                <button class="btn-action btn-process" onclick="processCart()">
+                    <i data-lucide="check-circle"></i> Procesar
+                </button>
+            </div>
+
+            <!-- PASO 2: CONFIRMACIÓN Y DESCARGA DE PDF PARA WHATSAPP -->
+            <div class="modal-body process-step-2" id="cart-step-2">
+                <p style="font-weight: 600; color: var(--primary);">
+                    ¡Tu pedido está listo! Descarga tu comprobante en PDF y envianos tu orden a WhatsApp.
+                </p>
+
+                <!-- Vista para Generar PDF -->
+                <div class="pdf-preview-box" id="pdf-content">
+                    <div class="pdf-header">
+                        <h2 style="color: var(--primary); font-size: 1.2rem;">DARS SUPPLY</h2>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Resumen de Pedido de Compra</p>
+                    </div>
+                    <table class="pdf-table">
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Producto</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdf-items-body">
+                            <!-- Inyectado por JS -->
+                        </tbody>
+                    </table>
+                    <div style="text-align: right; font-weight: bold; font-size: 1rem;" id="pdf-total-box">
+                        <!-- Inyectado por JS -->
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button class="btn-action btn-process" onclick="downloadPDFAndSendWA()">
+                        <i data-lucide="file-text"></i> Descargar PDF y Pedir por WhatsApp
+                    </button>
+                    <button class="btn-action btn-cancel" style="background-color: var(--text-muted);" onclick="backToCartStep1()">
+                        Volver al Carrito
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <!-- PIE DE PÁGINA -->
     <footer>
         <p>&copy; 2026 DARS SUPPLY. Ventas al mayor y detal.</p>
         <p style="font-size: 0.8rem; margin-top: 5px; color: #94A3B8;">Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Inicializar Iconos -->
+    <!-- LÓGICA DE JAVASCRIPT DEL CARRITO Y PDF -->
     <script>
+        let cart = [];
+
+        // Agregar Producto al Carrito
+        function addToCart(title, price) {
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ title, price, qty: 1 });
+            }
+            updateCartUI();
+            openCartModal();
+        }
+
+        // Cambiar Cantidad de un Producto
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        // Eliminar Producto del Carrito
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // Anular / Vaciar Carrito
+        function cancelCart() {
+            if (confirm("¿Estás seguro de que deseas anular y vaciar todo el pedido?")) {
+                cart = [];
+                updateCartUI();
+                closeCartModal();
+            }
+        }
+
+        // Actualizar Interfaz del Carrito
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const summaryBox = document.getElementById('cart-summary-box');
+            const headerCount = document.getElementById('header-cart-count');
+            const floatCount = document.getElementById('float-cart-count');
+            const footer = document.getElementById('cart-footer-1');
+
+            let totalPieces = 0;
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalPieces += item.qty;
+                totalPrice += item.price * item.qty;
+            });
+
+            headerCount.innerText = totalPieces;
+            floatCount.innerText = totalPieces;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem 0;">El carrito está vacío.</p>`;
+                summaryBox.style.display = 'none';
+                footer.style.display = 'none';
+                return;
+            }
+
+            footer.style.display = 'flex';
+            summaryBox.style.display = 'block';
+
+            let html = '';
+            cart.forEach((item, index) => {
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price.toFixed(2)} c/u</div>
+                        </div>
+                        <div class="cart-qty-controls">
+                            <button class="btn-qty" onclick="changeQty(${index}, -1)">-</button>
+                            <span class="qty-val">${item.qty}</span>
+                            <button class="btn-qty" onclick="changeQty(${index}, 1)">+</button>
+                        </div>
+                        <button class="btn-remove-item" onclick="removeItem(${index})" title="Eliminar">
+                            <i data-lucide="trash" style="width: 18px;"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('summary-pieces').innerText = totalPieces;
+            document.getElementById('summary-total').innerText = `$${totalPrice.toFixed(2)}`;
+            lucide.createIcons();
+        }
+
+        // Abrir y Cerrar Modal
+        function openCartModal() {
+            document.getElementById('cart-modal').classList.add('active');
+            backToCartStep1();
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.remove('active');
+        }
+
+        // Pasar al Paso de Procesamiento (Paso 2)
+        function processCart() {
+            if (cart.length === 0) return;
+
+            document.getElementById('cart-step-1').style.display = 'none';
+            document.getElementById('cart-footer-1').style.display = 'none';
+            document.getElementById('cart-step-2').style.display = 'flex';
+
+            // Rellenar vista previa del PDF
+            const pdfBody = document.getElementById('pdf-items-body');
+            let pdfHtml = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                pdfHtml += `
+                    <tr>
+                        <td>${item.qty}x</td>
+                        <td>${item.title}</td>
+                        <td>$${subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            pdfBody.innerHTML = pdfHtml;
+            document.getElementById('pdf-total-box').innerText = `Total: $${total.toFixed(2)}`;
+        }
+
+        function backToCartStep1() {
+            document.getElementById('cart-step-1').style.display = 'block';
+            document.getElementById('cart-step-2').style.display = 'none';
+            if (cart.length > 0) {
+                document.getElementById('cart-footer-1').style.display = 'flex';
+            }
+        }
+
+        // Descargar PDF y Redirigir a WhatsApp
+        function downloadPDFAndSendWA() {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('pdf-content');
+
+            html2canvas(element).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth() - 20;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+                pdf.save('Pedido_DARS_SUPPLY.pdf');
+
+                // Construcción del mensaje predeterminado para WhatsApp
+                let message = "Hola DARS SUPPLY, acabo de realizar un pedido. Adjunto mi comprobante PDF con el siguiente detalle:%0A%0A";
+                let totalPieces = 0;
+                let totalPrice = 0;
+
+                cart.forEach(item => {
+                    const subtotal = item.price * item.qty;
+                    totalPieces += item.qty;
+                    totalPrice += subtotal;
+                    message += `• ${item.qty}x ${item.title} - $${subtotal.toFixed(2)}%0A`;
+                });
+
+                message += `%0A*Total de piezas:* ${totalPieces}`;
+                message += `%0A*Monto Total:* $${totalPrice.toFixed(2)}`;
+
+                const waPhone = "584226902371";
+                const waUrl = `https://wa.me/${waPhone}?text=${message}`;
+
+                // Abrir enlace a WhatsApp
+                setTimeout(() => {
+                    window.open(waUrl, '_blank');
+                }, 1000);
+            });
+        }
+
+        // Inicializar Iconos al cargar la página
         lucide.createIcons();
     </script>
 </body>
