@@ -311,6 +311,49 @@
             color: #15803D;
         }
 
+        /* CONTROL DE CANTIDAD EN LA TARJETA */
+        .product-qty-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 0.8rem;
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .btn-card-qty {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: background-color 0.2s;
+        }
+
+        .btn-card-qty:hover {
+            background-color: #E2E8F0;
+        }
+
+        .card-qty-input {
+            width: 45px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--primary);
+        }
+
         .btn-add-cart {
             background-color: var(--primary);
             color: var(--white);
@@ -324,11 +367,15 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
 
         .btn-add-cart:hover {
             background-color: var(--primary-light);
+        }
+
+        .btn-add-cart:active {
+            transform: scale(0.98);
         }
 
         /* --- MODAL DEL CARRITO --- */
@@ -602,7 +649,7 @@
     <main class="main-container">
 
         <!-- ========================================== -->
-        <!-- CATEGORÍA 1: HOGAR (8 PRODUCTOS) -->
+        <!-- CATEGORÍA 1: HOGAR -->
         <!-- ========================================== -->
         <section id="hogar" class="category-section">
             <h2 class="category-title"><i data-lucide="home"></i> Categoría: Hogar</h2>
@@ -618,7 +665,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 1', 10.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p1', -1)">-</button>
+                            <input type="number" id="p1-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p1', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 1', 10.00, 'p1')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -634,7 +686,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 2', 15.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p2', -1)">-</button>
+                            <input type="number" id="p2-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p2', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 2', 15.00, 'p2')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -650,7 +707,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.50</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 3', 12.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p3', -1)">-</button>
+                            <input type="number" id="p3-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p3', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 3', 12.00, 'p3')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -666,71 +728,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$20.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$16.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 5 -->
-                <article class="product-card">
-                    <img src="producto5.jpg" alt="Producto Hogar 5" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 5</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.50</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p4', -1)">-</button>
+                            <input type="number" id="p4-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p4', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 5', 8.50)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 6 -->
-                <article class="product-card">
-                    <img src="producto6.jpg" alt="Producto Hogar 6" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 6</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 6', 14.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 7 -->
-                <article class="product-card">
-                    <img src="producto7.jpg" alt="Producto Hogar 7" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 7</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.50</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 7', 18.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 8 -->
-                <article class="product-card">
-                    <img src="producto8.jpg" alt="Producto Hogar 8" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 8</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 8', 25.00)">
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00, 'p4')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -738,10 +741,9 @@
 
             </div>
         </section>
-        <!-- === FIN CATEGORÍA HOGAR === -->
 
         <!-- ========================================== -->
-        <!-- CATEGORÍA 2: TECNOLOGÍA (8 PRODUCTOS) -->
+        <!-- CATEGORÍA 2: TECNOLOGÍA -->
         <!-- ========================================== -->
         <section id="tecnologia" class="category-section">
             <h2 class="category-title"><i data-lucide="smartphone"></i> Categoría: Tecnología</h2>
@@ -757,7 +759,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 9', 15.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p9', -1)">-</button>
+                            <input type="number" id="p9-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p9', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 9', 15.00, 'p9')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -773,103 +780,12 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$18.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 11 -->
-                <article class="product-card">
-                    <img src="producto11.jpg" alt="Producto Tecnología 11" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 11</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$30.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$24.00</span></div>
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p10', -1)">-</button>
+                            <input type="number" id="p10-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p10', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 11', 30.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 12 -->
-                <article class="product-card">
-                    <img src="producto12.jpg" alt="Producto Tecnología 12" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 12</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 12', 18.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 13 -->
-                <article class="product-card">
-                    <img src="producto13.jpg" alt="Producto Tecnología 13" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 13</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.50</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$10.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 13', 12.50)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 14 -->
-                <article class="product-card">
-                    <img src="producto14.jpg" alt="Producto Tecnología 14" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 14</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 14', 25.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 15 -->
-                <article class="product-card">
-                    <img src="producto15.jpg" alt="Producto Tecnología 15" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 15</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$40.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$32.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 15', 40.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 16 -->
-                <article class="product-card">
-                    <img src="producto16.jpg" alt="Producto Tecnología 16" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 16</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 16', 16.00)">
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00, 'p10')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -877,269 +793,6 @@
 
             </div>
         </section>
-        <!-- === FIN CATEGORÍA TECNOLOGÍA === -->
-
-        <!-- ========================================== -->
-        <!-- CATEGORÍA 3: CABELLO (8 PRODUCTOS) -->
-        <!-- ========================================== -->
-        <section id="cabello" class="category-section">
-            <h2 class="category-title"><i data-lucide="sparkles"></i> Categoría: Cabello</h2>
-            <div class="products-grid">
-
-                <!-- Producto 17 -->
-                <article class="product-card">
-                    <img src="producto17.jpg" alt="Producto Cabello 17" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 17</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 17', 19.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 18 -->
-                <article class="product-card">
-                    <img src="producto18.jpg" alt="Producto Cabello 18" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 18</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 18', 14.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 19 -->
-                <article class="product-card">
-                    <img src="producto19.jpg" alt="Producto Cabello 19" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 19</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$17.50</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 19', 22.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 20 -->
-                <article class="product-card">
-                    <img src="producto20.jpg" alt="Producto Cabello 20" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 20</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$7.50</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 20', 10.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 21 -->
-                <article class="product-card">
-                    <img src="producto21.jpg" alt="Producto Cabello 21" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 21</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$28.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$22.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 21', 28.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 22 -->
-                <article class="product-card">
-                    <img src="producto22.jpg" alt="Producto Cabello 22" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 22</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.50</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 22', 16.50)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 23 -->
-                <article class="product-card">
-                    <img src="producto23.jpg" alt="Producto Cabello 23" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 23</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 23', 12.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 24 -->
-                <article class="product-card">
-                    <img src="producto24.jpg" alt="Producto Cabello 24" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 24</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$35.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$28.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 24', 35.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-            </div>
-        </section>
-        <!-- === FIN CATEGORÍA CABELLO === -->
-
-        <!-- ========================================== -->
-        <!-- CATEGORÍA 4: ÚTILES ESCOLARES (7 PRODUCTOS) -->
-        <!-- ========================================== -->
-        <section id="utiles" class="category-section">
-            <h2 class="category-title"><i data-lucide="book-open"></i> Categoría: Útiles Escolares</h2>
-            <div class="products-grid">
-
-                <!-- Producto 25 -->
-                <article class="product-card">
-                    <img src="producto25.jpg" alt="Producto Útiles Escolares 25" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 25</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$11.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.50</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 25', 11.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 26 -->
-                <article class="product-card">
-                    <img src="producto26.jpg" alt="Producto Útiles Escolares 26" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 26</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 26', 19.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 27 -->
-                <article class="product-card">
-                    <img src="producto27.jpg" alt="Producto Útiles Escolares 27" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 27</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 27', 18.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 28 -->
-                <article class="product-card">
-                    <img src="producto28.jpg" alt="Producto Útiles Escolares 28" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 28</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$5.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$3.50</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 28', 5.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 29 -->
-                <article class="product-card">
-                    <img src="producto29.jpg" alt="Producto Útiles Escolares 29" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 29</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 29', 8.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 30 -->
-                <article class="product-card">
-                    <img src="producto30.jpg" alt="Producto Útiles Escolares 30" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 30</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 30', 12.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 31 -->
-                <article class="product-card">
-                    <img src="producto31.jpg" alt="Producto Útiles Escolares 31" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Útiles Escolares 31</h3>
-                        <p class="product-description">Descripción breve del útil escolar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 31', 15.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-            </div>
-        </section>
-        <!-- === FIN CATEGORÍA ÚTILES ESCOLARES === -->
 
     </main>
 
@@ -1181,7 +834,7 @@
             <!-- PASO 2: CONFIRMACIÓN Y DESCARGA DE PDF PARA WHATSAPP -->
             <div class="modal-body process-step-2" id="cart-step-2">
                 <p style="font-weight: 600; color: var(--primary);">
-                    ¡Tu pedido está listo! Descarga tu comprobante en PDF y envianos tu orden a WhatsApp.
+                    ¡Tu pedido está listo! Descarga tu comprobante en PDF y envíanos tu orden a WhatsApp.
                 </p>
 
                 <!-- Vista para Generar PDF -->
@@ -1226,23 +879,40 @@
         <p style="font-size: 0.8rem; margin-top: 5px; color: #94A3B8;">Todos los derechos reservados.</p>
     </footer>
 
-    <!-- LÓGICA DE JAVASCRIPT DEL CARRITO Y PDF -->
+    <!-- LÓGICA DE JAVASCRIPT -->
     <script>
         let cart = [];
 
-        // Agregar Producto al Carrito
-        function addToCart(title, price) {
-            const existingItem = cart.find(item => item.title === title);
-            if (existingItem) {
-                existingItem.qty += 1;
-            } else {
-                cart.push({ title, price, qty: 1 });
-            }
-            updateCartUI();
-            openCartModal();
+        // Ajustar la cantidad en el selector de la tarjeta
+        function adjustCardQty(id, delta) {
+            const input = document.getElementById(`${id}-qty`);
+            if (!input) return;
+            let currentVal = parseInt(input.value) || 1;
+            currentVal += delta;
+            if (currentVal < 1) currentVal = 1;
+            input.value = currentVal;
         }
 
-        // Cambiar Cantidad de un Producto
+        // Agregar Producto al Carrito (SIN ABRIR EL MODAL)
+        function addToCart(title, price, qtyInputId) {
+            const qtyInput = document.getElementById(`${qtyInputId}-qty`);
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.qty += quantity;
+            } else {
+                cart.push({ title, price, qty: quantity });
+            }
+
+            // Reiniciar el contador de la tarjeta a 1
+            if (qtyInput) qtyInput.value = 1;
+
+            // Actualizar la interfaz (solo actualiza badges y contenido interno)
+            updateCartUI();
+        }
+
+        // Cambiar Cantidad dentro del Carrito Modal
         function changeQty(index, delta) {
             cart[index].qty += delta;
             if (cart[index].qty <= 0) {
@@ -1321,7 +991,7 @@
             lucide.createIcons();
         }
 
-        // Abrir y Cerrar Modal
+        // Abrir y Cerrar Modal (ÚNICA VÍA PARA VER EL CARRITO)
         function openCartModal() {
             document.getElementById('cart-modal').classList.add('active');
             backToCartStep1();
@@ -1339,7 +1009,6 @@
             document.getElementById('cart-footer-1').style.display = 'none';
             document.getElementById('cart-step-2').style.display = 'flex';
 
-            // Rellenar vista previa del PDF
             const pdfBody = document.getElementById('pdf-items-body');
             let pdfHtml = '';
             let total = 0;
@@ -1383,7 +1052,6 @@
                 pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
                 pdf.save('Pedido_DARS_SUPPLY.pdf');
 
-                // Construcción del mensaje predeterminado para WhatsApp
                 let message = "Hola DARS SUPPLY, acabo de realizar un pedido. Adjunto mi comprobante PDF con el siguiente detalle:%0A%0A";
                 let totalPieces = 0;
                 let totalPrice = 0;
@@ -1401,14 +1069,13 @@
                 const waPhone = "584226902371";
                 const waUrl = `https://wa.me/${waPhone}?text=${message}`;
 
-                // Abrir enlace a WhatsApp
                 setTimeout(() => {
                     window.open(waUrl, '_blank');
                 }, 1000);
             });
         }
 
-        // Inicializar Iconos al cargar la página
+        // Inicializar Iconos al cargar
         lucide.createIcons();
     </script>
 </body>
