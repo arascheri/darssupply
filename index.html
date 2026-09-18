@@ -710,7 +710,7 @@
                             <input type="number" id="p2-qty" class="card-qty-input" value="1" min="1" readonly>
                             <button class="btn-card-qty" onclick="adjustCardQty('p2', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Set de Cuchillos de Cocina', 4.50, 'p2')">
+                        <button class="btn-add-cart" onclick="addToCart('Set de Cuchillos de Cocina', 4.50, 3.00, 'p2')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -731,7 +731,7 @@
                             <input type="number" id="p3-qty" class="card-qty-input" value="1" min="1" readonly>
                             <button class="btn-card-qty" onclick="adjustCardQty('p3', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Piscina Inflable Infantil Shuixiha', 17.00, 'p3')">
+                        <button class="btn-add-cart" onclick="addToCart('Piscina Inflable Infantil Shuixiha', 17.00, 14.00, 'p3')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -1403,7 +1403,7 @@
             nombre: nombre,
             cantidad: cantidad,
             precioUnitario: precioFinal,
-            subtotal: subtotal
+            subtotal: subtotal,
             };
 
             console.log("Producto agregado al carrito:", item);
