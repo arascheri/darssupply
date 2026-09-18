@@ -689,7 +689,7 @@
                             <input type="number" id="p1-qty" class="card-qty-input" value="1" min="1" readonly>
                             <button class="btn-card-qty" onclick="adjustCardQty('p1', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Casco con Doble Visor', 47.00, 'p1')">
+                        <button class="btn-add-cart" onclick="addToCart('Casco con Doble Visor', 47.00, 42.00, 'p1')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -1387,21 +1387,30 @@
             input.value = currentVal;
         }
 
-        function addToCart(title, price, qtyInputId) {
-            const qtyInput = document.getElementById(`${qtyInputId}-qty`);
-            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+        function addToCart(nombre, precioDetal, precioMayor, inputId) {
+            // 1. Obtener la cantidad del input HTML
+            const cantidadInput = document.getElementById(`${inputId}-qty`);
+            const cantidad = parseInt(cantidadInput.value) || 1;
 
-            const existingItem = cart.find(item => item.title === title);
-            if (existingItem) {
-                existingItem.qty += quantity;
-            } else {
-                cart.push({ title, price, qty: quantity });
-            }
+            // 2. Determinar qué precio aplica (mayorista a partir de 3 unidades)
+            const precioFinal = (cantidad >= 3) ? precioMayor : precioDetal;
 
-            if (qtyInput) qtyInput.value = 1;
-            updateCartUI();
+            // 3. Calcular el total para este producto
+            const subtotal = cantidad * precioFinal;
+
+            // Ejemplo de estructura del objeto para agregar al carrito
+            const item = {
+            nombre: nombre,
+            cantidad: cantidad,
+            precioUnitario: precioFinal,
+            subtotal: subtotal
+            };
+
+            console.log("Producto agregado al carrito:", item);
+    
+            // Aquí agregas la lógica para guardar el 'item' en tu arreglo o sesión del carrito
         }
-
+            
         function changeQty(index, delta) {
             cart[index].qty += delta;
             if (cart[index].qty <= 0) {
