@@ -1387,28 +1387,20 @@
             input.value = currentVal;
         }
 
-        function addToCart(nombre, precioDetal, precioMayor, inputId) {
-            // 1. Obtener la cantidad del input HTML
-            const cantidadInput = document.getElementById(`${inputId}-qty`);
-            const cantidad = parseInt(cantidadInput.value) || 1;
+        // Función addToCart modificada para recibir precioDetal y precioMayor
+        function addToCart(title, priceDetal, priceMayor, qtyInputId) {
+            const qtyInput = document.getElementById(`${qtyInputId}-qty`);
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
 
-            // 2. Determinar qué precio aplica (mayorista a partir de 3 unidades)
-            const precioFinal = (cantidad >= 3) ? precioMayor : precioDetal;
+            const existingItem = cart.find(item => item.title === title);
+            if (existingItem) {
+                existingItem.qty += quantity;
+            } else {
+                cart.push({ title, priceDetal, priceMayor, qty: quantity });
+            }
 
-            // 3. Calcular el total para este producto
-            const subtotal = cantidad * precioFinal;
-
-            // Ejemplo de estructura del objeto para agregar al carrito
-            const item = {
-            nombre: nombre,
-            cantidad: cantidad,
-            precioUnitario: precioFinal,
-            subtotal: subtotal,
-            };
-
-            console.log("Producto agregado al carrito:", item);
-    
-            // Aquí agregas la lógica para guardar el 'item' en tu arreglo o sesión del carrito
+            if (qtyInput) qtyInput.value = 1;
+            updateCartUI();
         }
             
         function changeQty(index, delta) {
@@ -1443,9 +1435,11 @@
             let totalPieces = 0;
             let totalPrice = 0;
 
+            // Recalcula el precio actual de cada producto según su cantidad (si >= 3 usa precio al mayor)
             cart.forEach(item => {
                 totalPieces += item.qty;
-                totalPrice += item.price * item.qty;
+                const activePrice = item.qty >= 3 ? item.priceMayor : item.priceDetal;
+                totalPrice += activePrice * item.qty;
             });
 
             headerCount.innerText = totalPieces;
@@ -1463,13 +1457,17 @@
             summaryBox.style.display = 'block';
             formBox.style.display = 'block';
 
-            let html = '';
+           let html = '';
             cart.forEach((item, index) => {
+                const activePrice = item.qty >= 3 ? item.priceMayor : item.priceDetal;
+                const isMayor = item.qty >= 3;
                 html += `
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.title}</div>
-                            <div class="cart-item-price">$${item.price.toFixed(2)} c/u</div>
+                            <div class="cart-item-price">
+                                $${activePrice.toFixed(2)} c/u ${isMayor ? '<span style="color: #15803D; font-weight: bold; font-size: 0.75rem;">(Precio Mayor)</span>' : ''}
+                            </div>
                         </div>
                         <div class="cart-qty-controls">
                             <button class="btn-qty" onclick="changeQty(${index}, -1)">-</button>
@@ -1531,14 +1529,15 @@
             let pdfHtml = '';
             let subtotalGeneral = 0;
 
-            cart.forEach(item => {
-                const subtotal = item.price * item.qty;
+           cart.forEach(item => {
+                const activePrice = item.qty >= 3 ? item.priceMayor : item.priceDetal;
+                const subtotal = activePrice * item.qty;
                 subtotalGeneral += subtotal;
                 pdfHtml += `
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 8px; text-align: center; color: #475569;">${item.qty}x</td>
-                        <td style="padding: 8px; font-weight: 500;">${item.title}</td>
-                        <td style="padding: 8px; text-align: right; color: #475569;">$${item.price.toFixed(2)}</td>
+                        <td style="padding: 8px; font-weight: 500;">${item.title} ${item.qty >= 3 ? '(Precio Mayor)' : ''}</td>
+                        <td style="padding: 8px; text-align: right; color: #475569;">$${activePrice.toFixed(2)}</td>
                         <td style="padding: 8px; text-align: right; font-weight: 500;">$${subtotal.toFixed(2)}</td>
                     </tr>
                 `;
@@ -1627,10 +1626,11 @@
             let totalPrice = 0;
 
             cart.forEach(item => {
-                const subtotal = item.price * item.qty;
+                const activePrice = item.qty >= 3 ? item.priceMayor : item.priceDetal;
+                const subtotal = activePrice * item.qty;
                 totalPieces += item.qty;
                 totalPrice += subtotal;
-                message += `• ${item.qty}x ${item.title} - $${subtotal.toFixed(2)}%0A`;
+                message += `• ${item.qty}x ${item.title} - $${subtotal.toFixed(2)} ${item.qty >= 3 ? '(Precio Mayor)' : ''}%0A`;
             });
 
             message += `%0A*Total Piezas:* ${totalPieces}`;
