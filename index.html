@@ -13,7 +13,7 @@
     <style>
         /* --- RESET Y VARIABLES --- */
         :root {
-            --primary: #0A192F;        /* Azul Marino Oscuro */
+            --primary: #1D4D54;        /* Verde Turquesa Oscuro */
             --primary-light: #1E293B;  /* Azul Marino Medio */
             --accent-green: #25D366;   /* Verde WhatsApp */
             --accent-green-hover: #1EBE5B;
@@ -25,6 +25,7 @@
             --text-muted: #64748B;
             --border-color: #E2E8F0;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --nav-border: #1a1e23;
             --radius: 12px;
         }
 
@@ -54,7 +55,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: none;
         }
 
         .header-container {
@@ -118,8 +119,8 @@
 
         /* --- NAVEGACIÓN POR CATEGORÍAS --- */
         .nav-categories {
-            background-color: var(--primary-light);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--primary);
+            border-top: none;
             position: sticky;
             top: 65px;
             z-index: 90;
@@ -371,7 +372,7 @@
         }
 
         .btn-add-cart:hover {
-            background-color: var(--primary-light);
+            background-color: var(--primary);
         }
 
         .btn-add-cart:active {
@@ -497,11 +498,56 @@
             padding: 4px;
         }
 
+        /* Formulario del Cliente */
+        .client-form-box {
+            background-color: #F8FAFC;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-top: 1.2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
         .cart-summary {
             background-color: #F8FAFC;
             border-radius: 8px;
             padding: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             border: 1px solid var(--border-color);
         }
 
@@ -577,30 +623,6 @@
             font-size: 0.85rem;
         }
 
-        .pdf-header {
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }
-
-        .pdf-table th, .pdf-table td {
-            border-bottom: 1px solid var(--border-color);
-            padding: 6px 4px;
-            text-align: left;
-        }
-
-        .pdf-table th {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
         /* --- FOOTER --- */
         footer {
             background-color: var(--primary);
@@ -618,7 +640,7 @@
     <header class="header">
         <div class="header-container">
             <div class="brand">
-                <img src="logo.png" alt="DARS SUPPLY Logo" onerror="this.style.display='none'">
+                <img src="logo.png" alt="Logo DARS SUPPLY" id="header-logo" />
                 <span class="brand-title">DARS SUPPLY</span>
             </div>
             <button class="btn-header-cart" onclick="openCartModal()">
@@ -648,13 +670,10 @@
     <!-- CATÁLOGO DE PRODUCTOS -->
     <main class="main-container">
 
-        <!-- ========================================== -->
         <!-- CATEGORÍA 1: HOGAR -->
-        <!-- ========================================== -->
         <section id="hogar" class="category-section">
             <h2 class="category-title"><i data-lucide="home"></i> Categoría: Hogar</h2>
             <div class="products-grid">
-
                 <!-- Producto 1 -->
                 <article class="product-card">
                     <img src="producto1.jpg" alt="Producto Hogar 1" class="product-img">
@@ -696,8 +715,7 @@
                         </button>
                     </div>
                 </article>
-
-                <!-- Producto 3 -->
+<!-- Producto 3 -->
                 <article class="product-card">
                     <img src="producto3.jpg" alt="Producto Hogar 3" class="product-img">
                     <div class="product-content">
@@ -707,12 +725,7 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.50</span></div>
                         </div>
-                        <div class="product-qty-selector">
-                            <button class="btn-card-qty" onclick="adjustCardQty('p3', -1)">-</button>
-                            <input type="number" id="p3-qty" class="card-qty-input" value="1" min="1" readonly>
-                            <button class="btn-card-qty" onclick="adjustCardQty('p3', 1)">+</button>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 3', 12.00, 'p3')">
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 3', 12.00)">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -728,27 +741,82 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$20.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$16.00</span></div>
                         </div>
-                        <div class="product-qty-selector">
-                            <button class="btn-card-qty" onclick="adjustCardQty('p4', -1)">-</button>
-                            <input type="number" id="p4-qty" class="card-qty-input" value="1" min="1" readonly>
-                            <button class="btn-card-qty" onclick="adjustCardQty('p4', 1)">+</button>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00, 'p4')">
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00)">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
+                <!-- Producto 5 -->
+                <article class="product-card">
+                    <img src="producto5.jpg" alt="Producto Hogar 5" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Hogar 5</h3>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 5', 8.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 6 -->
+                <article class="product-card">
+                    <img src="producto6.jpg" alt="Producto Hogar 6" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Hogar 6</h3>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 6', 14.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 7 -->
+                <article class="product-card">
+                    <img src="producto7.jpg" alt="Producto Hogar 7" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Hogar 7</h3>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.50</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 7', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 8 -->
+                <article class="product-card">
+                    <img src="producto8.jpg" alt="Producto Hogar 8" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Hogar 8</h3>
+                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 8', 25.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <!-- ========================================== -->
         <!-- CATEGORÍA 2: TECNOLOGÍA -->
-        <!-- ========================================== -->
         <section id="tecnologia" class="category-section">
             <h2 class="category-title"><i data-lucide="smartphone"></i> Categoría: Tecnología</h2>
             <div class="products-grid">
-
                 <!-- Producto 9 -->
                 <article class="product-card">
                     <img src="producto9.jpg" alt="Producto Tecnología 9" class="product-img">
@@ -769,7 +837,6 @@
                         </button>
                     </div>
                 </article>
-
                 <!-- Producto 10 -->
                 <article class="product-card">
                     <img src="producto10.jpg" alt="Producto Tecnología 10" class="product-img">
@@ -780,12 +847,102 @@
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$18.00</span></div>
                         </div>
-                        <div class="product-qty-selector">
-                            <button class="btn-card-qty" onclick="adjustCardQty('p10', -1)">-</button>
-                            <input type="number" id="p10-qty" class="card-qty-input" value="1" min="1" readonly>
-                            <button class="btn-card-qty" onclick="adjustCardQty('p10', 1)">+</button>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+                <!-- Producto 11 -->
+                <article class="product-card">
+                    <img src="producto11.jpg" alt="Producto Tecnología 11" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 11</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$30.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$24.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00, 'p10')">
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 11', 30.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 12 -->
+                <article class="product-card">
+                    <img src="producto12.jpg" alt="Producto Tecnología 12" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 12</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 12', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 13 -->
+                <article class="product-card">
+                    <img src="producto13.jpg" alt="Producto Tecnología 13" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 13</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$10.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 13', 12.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 14 -->
+                <article class="product-card">
+                    <img src="producto14.jpg" alt="Producto Tecnología 14" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 14</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 14', 25.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 15 -->
+                <article class="product-card">
+                    <img src="producto15.jpg" alt="Producto Tecnología 15" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 15</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$40.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$32.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 15', 40.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 16 -->
+                <article class="product-card">
+                    <img src="producto16.jpg" alt="Producto Tecnología 16" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Tecnología 16</h3>
+                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 16', 16.00)">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -793,9 +950,272 @@
 
             </div>
         </section>
+        <!-- === FIN CATEGORÍA TECNOLOGÍA === -->
+
+        <!-- ========================================== -->
+        <!-- CATEGORÍA 3: CABELLO (8 PRODUCTOS) -->
+        <!-- ========================================== -->
+        <section id="cabello" class="category-section">
+            <h2 class="category-title"><i data-lucide="sparkles"></i> Categoría: Cabello</h2>
+            <div class="products-grid">
+
+                <!-- Producto 17 -->
+                <article class="product-card">
+                    <img src="producto17.jpg" alt="Producto Cabello 17" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 17</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 17', 19.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 18 -->
+                <article class="product-card">
+                    <img src="producto18.jpg" alt="Producto Cabello 18" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 18</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 18', 14.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 19 -->
+                <article class="product-card">
+                    <img src="producto19.jpg" alt="Producto Cabello 19" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 19</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$17.50</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 19', 22.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 20 -->
+                <article class="product-card">
+                    <img src="producto20.jpg" alt="Producto Cabello 20" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 20</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$7.50</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 20', 10.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 21 -->
+                <article class="product-card">
+                    <img src="producto21.jpg" alt="Producto Cabello 21" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 21</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$28.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$22.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 21', 28.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 22 -->
+                <article class="product-card">
+                    <img src="producto22.jpg" alt="Producto Cabello 22" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 22</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$16.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$13.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 22', 16.50)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 23 -->
+                <article class="product-card">
+                    <img src="producto23.jpg" alt="Producto Cabello 23" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 23</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 23', 12.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 24 -->
+                <article class="product-card">
+                    <img src="producto24.jpg" alt="Producto Cabello 24" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Cabello 24</h3>
+                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$35.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$28.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 24', 35.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+        <!-- === FIN CATEGORÍA CABELLO === -->
+
+        <!-- ========================================== -->
+        <!-- CATEGORÍA 4: ÚTILES ESCOLARES (7 PRODUCTOS) -->
+        <!-- ========================================== -->
+        <section id="utiles" class="category-section">
+            <h2 class="category-title"><i data-lucide="book-open"></i> Categoría: Útiles Escolares</h2>
+            <div class="products-grid">
+
+                <!-- Producto 25 -->
+                <article class="product-card">
+                    <img src="producto25.jpg" alt="Producto Útiles Escolares 25" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 25</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$11.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.50</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 25', 11.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 26 -->
+                <article class="product-card">
+                    <img src="producto26.jpg" alt="Producto Útiles Escolares 26" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 26</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$19.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 26', 19.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 27 -->
+                <article class="product-card">
+                    <img src="producto27.jpg" alt="Producto Útiles Escolares 27" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 27</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$15.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 27', 18.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 28 -->
+                <article class="product-card">
+                    <img src="producto28.jpg" alt="Producto Útiles Escolares 28" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 28</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$5.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$3.50</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 28', 5.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 29 -->
+                <article class="product-card">
+                    <img src="producto29.jpg" alt="Producto Útiles Escolares 29" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 29</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 29', 8.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 30 -->
+                <article class="product-card">
+                    <img src="producto30.jpg" alt="Producto Útiles Escolares 30" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 30</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 30', 12.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 31 -->
+                <article class="product-card">
+                    <img src="producto31.jpg" alt="Producto Útiles Escolares 31" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Producto Útiles Escolares 31</h3>
+                        <p class="product-description">Descripción breve del útil escolar.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Producto Útiles Escolares 31', 15.00)">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+        <!-- === FIN CATEGORÍA ÚTILES ESCOLARES === -->
 
     </main>
-
+            
     <!-- MODAL DEL CARRITO -->
     <div class="modal-overlay" id="cart-modal">
         <div class="modal-container">
@@ -804,10 +1224,40 @@
                 <button class="close-modal" onclick="closeCartModal()"><i data-lucide="x"></i></button>
             </div>
 
-            <!-- PASO 1: LISTADO DE PRODUCTOS EN CARRITO -->
+            <!-- PASO 1: LISTADO DE PRODUCTOS Y REGISTRO DE CLIENTE -->
             <div class="modal-body" id="cart-step-1">
                 <div id="cart-items-container">
                     <!-- Los productos se inyectan dinámicamente con JS -->
+                </div>
+
+                <!-- FORMULARIO DE REGISTRO DE CLIENTE -->
+                <div class="client-form-box" id="client-form-box" style="display: none;">
+                    <div class="form-title"><i data-lucide="user-check"></i> Datos del Cliente y Envío</div>
+                    
+                    <div class="form-group">
+                        <label for="client-name">Nombre Completo *</label>
+                        <input type="text" id="client-name" class="form-control" placeholder="Ej: Maria Perez" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="client-phone">Teléfono / WhatsApp *</label>
+                        <input type="tel" id="client-phone" class="form-control" placeholder="Ej: +58 412 1234567" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="client-address">Dirección de Envío *</label>
+                        <input type="text" id="client-address" class="form-control" placeholder="Ej: Av. Principal, Guatire, Miranda" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Método de Pago *</label>
+                        <select id="payment-method" class="form-control" required>
+                            <option value="">-- Seleccione un método --</option>
+                            <option value="Pago Móvil">Pago Móvil</option>
+                            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                            <option value="Efectivo ($ / BS)">Efectivo</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="cart-summary" id="cart-summary-box" style="display: none;">
@@ -838,31 +1288,70 @@
                 </p>
 
                 <!-- Vista para Generar PDF -->
-                <div class="pdf-preview-box" id="pdf-content">
-                    <div class="pdf-header">
-                        <h2 style="color: var(--primary); font-size: 1.2rem;">DARS SUPPLY</h2>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Resumen de Pedido de Compra</p>
+                <div class="pdf-preview-box" id="pdf-content" style="background: #ffffff; padding: 25px; font-family: Arial, sans-serif; color: #333; font-size: 13px; line-height: 1.4;">
+                    <!-- ENCABEZADO -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1D4D54; padding-bottom: 12px; margin-bottom: 18px;">
+                        <div>
+                            <img src="logo.png" alt="DARS SUPPLY Logo" id="pdf-logo" style="max-height: 60px; width: auto; display: block; margin-bottom: 4px;" />
+                            <p style="margin: 0; color: #666; font-size: 11px;">Importación y Ventas</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <h2 style="font-size: 14px; margin: 0; color: #333; font-weight: bold; text-transform: uppercase;">Resumen de Pedido de Compra</h2>
+                            <p style="margin: 3px 0 0 0; font-size: 12px;"><strong>Pedido #:</strong> <span id="pdf-order-id">DS-24001</span></p>
+                            <p style="margin: 2px 0 0 0; font-size: 12px;"><strong>Fecha:</strong> <span id="pdf-order-date">18 de Septiembre, 2026</span></p>
+                            <p style="margin: 2px 0 0 0; font-size: 12px;"><strong>Estado:</strong> <span style="color: #10B981; font-weight: bold;">Confirmado</span></p>
+                        </div>
                     </div>
-                    <table class="pdf-table">
+
+                    <!-- BLOQUES DE DATOS -->
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div style="flex: 1; background-color: #f8fafc; padding: 10px 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <h3 style="font-size: 11px; color: #64748b; margin: 0 0 6px 0; text-transform: uppercase; font-weight: bold;">Datos del Cliente</h3>
+                            <p style="margin: 2px 0;"><strong>Nombre:</strong> <span id="pdf-client-name"></span></p>
+                            <p style="margin: 2px 0;"><strong>Dirección:</strong> <span id="pdf-client-address"></span></p>
+                            <p style="margin: 2px 0;"><strong>Teléfono:</strong> <span id="pdf-client-phone"></span></p>
+                        </div>
+
+                        <div style="flex: 1; background-color: #f8fafc; padding: 10px 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                            <h3 style="font-size: 11px; color: #64748b; margin: 0 0 6px 0; text-transform: uppercase; font-weight: bold;">Detalles de Pago y Envío</h3>
+                            <p style="margin: 2px 0;"><strong>Método de Pago:</strong> <span id="pdf-payment-method"></span></p>
+                            <p style="margin: 2px 0;"><strong>Referencia:</strong> Por confirmar</p>
+                            <p style="margin: 2px 0;"><strong>Método de Envío:</strong> Entrega Estándar</p>
+                        </div>
+                    </div>
+
+                    <!-- TABLA DE PRODUCTOS -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px;">
                         <thead>
-                            <tr>
-                                <th>Cant.</th>
-                                <th>Producto</th>
-                                <th>Subtotal</th>
+                            <tr style="background-color: #1D4D54; color: #ffffff; text-align: left;">
+                                <th style="padding: 8px; font-size: 12px; width: 50px; text-align: center;">Cant.</th>
+                                <th style="padding: 8px; font-size: 12px;">Producto</th>
+                                <th style="padding: 8px; font-size: 12px; text-align: right; width: 90px;">Precio Unit.</th>
+                                <th style="padding: 8px; font-size: 12px; text-align: right; width: 90px;">Subtotal</th>
                             </tr>
                         </thead>
-                        <tbody id="pdf-items-body">
-                            <!-- Inyectado por JS -->
-                        </tbody>
+                        <tbody id="pdf-items-body"></tbody>
                     </table>
-                    <div style="text-align: right; font-weight: bold; font-size: 1rem;" id="pdf-total-box">
-                        <!-- Inyectado por JS -->
+
+                    <!-- TOTALES -->
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 25px;">
+                        <div style="width: 220px;" id="pdf-totals-box"></div>
+                    </div>
+
+                    <!-- PIE DE PÁGINA -->
+                    <div style="text-align: center; margin-top: 25px; padding-top: 12px; border-top: 1px dashed #cbd5e1; font-size: 10px; color: #64748b;">
+                        <p style="margin: 0 0 4px 0; font-weight: bold;">Gracias por su compra. Conserve este documento como respaldo.</p>
+                        <p style="margin: 0;">DARS SUPPLY - RIF J-12345678-0 - Av. Principal Local 12, Caracas - www.darssupply.com - soporte@darssupply.com</p>     
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button class="btn-action btn-process" onclick="downloadPDFAndSendWA()">
-                        <i data-lucide="file-text"></i> Descargar PDF y Pedir por WhatsApp
+                <!-- BOTONES ACCIÓN INDEPENDIENTES -->
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <button class="btn-action" style="background-color: var(--primary); color: var(--white);" onclick="downloadPDFOnly()">
+                        <i data-lucide="download"></i> 1. Descargar Comprobante PDF
+                    </button>
+                    <button class="btn-action btn-process" onclick="sendWhatsAppOnly()">
+                        <i data-lucide="message-square"></i> 2. Enviar Pedido por WhatsApp
                     </button>
                     <button class="btn-action btn-cancel" style="background-color: var(--text-muted);" onclick="backToCartStep1()">
                         Volver al Carrito
@@ -883,7 +1372,6 @@
     <script>
         let cart = [];
 
-        // Ajustar la cantidad en el selector de la tarjeta
         function adjustCardQty(id, delta) {
             const input = document.getElementById(`${id}-qty`);
             if (!input) return;
@@ -893,7 +1381,6 @@
             input.value = currentVal;
         }
 
-        // Agregar Producto al Carrito (SIN ABRIR EL MODAL)
         function addToCart(title, price, qtyInputId) {
             const qtyInput = document.getElementById(`${qtyInputId}-qty`);
             const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
@@ -905,14 +1392,10 @@
                 cart.push({ title, price, qty: quantity });
             }
 
-            // Reiniciar el contador de la tarjeta a 1
             if (qtyInput) qtyInput.value = 1;
-
-            // Actualizar la interfaz (solo actualiza badges y contenido interno)
             updateCartUI();
         }
 
-        // Cambiar Cantidad dentro del Carrito Modal
         function changeQty(index, delta) {
             cart[index].qty += delta;
             if (cart[index].qty <= 0) {
@@ -921,13 +1404,11 @@
             updateCartUI();
         }
 
-        // Eliminar Producto del Carrito
         function removeItem(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
 
-        // Anular / Vaciar Carrito
         function cancelCart() {
             if (confirm("¿Estás seguro de que deseas anular y vaciar todo el pedido?")) {
                 cart = [];
@@ -936,10 +1417,10 @@
             }
         }
 
-        // Actualizar Interfaz del Carrito
         function updateCartUI() {
             const container = document.getElementById('cart-items-container');
             const summaryBox = document.getElementById('cart-summary-box');
+            const formBox = document.getElementById('client-form-box');
             const headerCount = document.getElementById('header-cart-count');
             const floatCount = document.getElementById('float-cart-count');
             const footer = document.getElementById('cart-footer-1');
@@ -958,12 +1439,14 @@
             if (cart.length === 0) {
                 container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 2rem 0;">El carrito está vacío.</p>`;
                 summaryBox.style.display = 'none';
+                formBox.style.display = 'none';
                 footer.style.display = 'none';
                 return;
             }
 
             footer.style.display = 'flex';
             summaryBox.style.display = 'block';
+            formBox.style.display = 'block';
 
             let html = '';
             cart.forEach((item, index) => {
@@ -991,7 +1474,6 @@
             lucide.createIcons();
         }
 
-        // Abrir y Cerrar Modal (ÚNICA VÍA PARA VER EL CARRITO)
         function openCartModal() {
             document.getElementById('cart-modal').classList.add('active');
             backToCartStep1();
@@ -1001,32 +1483,72 @@
             document.getElementById('cart-modal').classList.remove('active');
         }
 
-        // Pasar al Paso de Procesamiento (Paso 2)
         function processCart() {
             if (cart.length === 0) return;
+
+            // Validación de campos obligatorios del cliente
+            const name = document.getElementById('client-name').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const address = document.getElementById('client-address').value.trim();
+            const payment = document.getElementById('payment-method').value;
+
+            if (!name || !phone || !address || !payment) {
+                alert("Por favor completa todos los datos del cliente, la dirección y el método de pago antes de continuar.");
+                return;
+            }
+
+            // Asignar los datos recopilados a la vista previa del PDF
+            document.getElementById('pdf-client-name').innerText = name;
+            document.getElementById('pdf-client-phone').innerText = phone;
+            document.getElementById('pdf-client-address').innerText = address;
+            document.getElementById('pdf-payment-method').innerText = payment;
 
             document.getElementById('cart-step-1').style.display = 'none';
             document.getElementById('cart-footer-1').style.display = 'none';
             document.getElementById('cart-step-2').style.display = 'flex';
 
+            const hoy = new Date();
+            const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('pdf-order-date').innerText = hoy.toLocaleDateString('es-ES', opcionesFecha);
+            document.getElementById('pdf-order-id').innerText = 'DS-' + Math.floor(10000 + Math.random() * 90000);
+
             const pdfBody = document.getElementById('pdf-items-body');
             let pdfHtml = '';
-            let total = 0;
+            let subtotalGeneral = 0;
 
             cart.forEach(item => {
                 const subtotal = item.price * item.qty;
-                total += subtotal;
+                subtotalGeneral += subtotal;
                 pdfHtml += `
-                    <tr>
-                        <td>${item.qty}x</td>
-                        <td>${item.title}</td>
-                        <td>$${subtotal.toFixed(2)}</td>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px; text-align: center; color: #475569;">${item.qty}x</td>
+                        <td style="padding: 8px; font-weight: 500;">${item.title}</td>
+                        <td style="padding: 8px; text-align: right; color: #475569;">$${item.price.toFixed(2)}</td>
+                        <td style="padding: 8px; text-align: right; font-weight: 500;">$${subtotal.toFixed(2)}</td>
                     </tr>
                 `;
             });
-
+            
             pdfBody.innerHTML = pdfHtml;
-            document.getElementById('pdf-total-box').innerText = `Total: $${total.toFixed(2)}`;
+
+            const envio = 0.00; 
+            const totalFinal = subtotalGeneral + envio;
+
+            const totalsBox = document.getElementById('pdf-totals-box');
+            totalsBox.innerHTML = `
+                <div style="display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; color: #475569;">
+                    <span>Subtotal:</span>
+                    <span>$${subtotalGeneral.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; color: #475569;">
+                    <span>Gastos de Envío:</span>
+                    <span>$${envio.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 15px; font-weight: bold; border-top: 2px solid #1D4D54; margin-top: 4px; color: #1D4D54;">
+                    <span>Total General:</span>
+                    <span>$${totalFinal.toFixed(2)}</span>
+                </div>
+            `;
         }
 
         function backToCartStep1() {
@@ -1037,45 +1559,77 @@
             }
         }
 
-        // Descargar PDF y Redirigir a WhatsApp
-        function downloadPDFAndSendWA() {
+        // DESCARGA DE PDF CORREGIDA Y OPTIMIZADA
+        function downloadPDFOnly() {
             const { jsPDF } = window.jspdf;
             const element = document.getElementById('pdf-content');
 
-            html2canvas(element).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
+            // Opciones optimizadas para evitar fallos por CORS e imágenes locales
+            const options = {
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                logging: false,
+                backgroundColor: '#ffffff',
+                ignoreElements: function (element) {
+                    // Evita que elementos problemáticos o invisibles bloqueen el renderizado
+                    return element.classList.contains('no-pdf');
+                }
+            };
+
+            html2canvas(element, options).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth() - 20;
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const margin = 10;
+                const printableWidth = pdfWidth - (margin * 2);
+                const pdfHeight = (canvas.height * printableWidth) / canvas.width;
 
-                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight);
+                pdf.addImage(imgData, 'JPEG', margin, margin, printableWidth, pdfHeight);
                 pdf.save('Pedido_DARS_SUPPLY.pdf');
-
-                let message = "Hola DARS SUPPLY, acabo de realizar un pedido. Adjunto mi comprobante PDF con el siguiente detalle:%0A%0A";
-                let totalPieces = 0;
-                let totalPrice = 0;
-
-                cart.forEach(item => {
-                    const subtotal = item.price * item.qty;
-                    totalPieces += item.qty;
-                    totalPrice += subtotal;
-                    message += `• ${item.qty}x ${item.title} - $${subtotal.toFixed(2)}%0A`;
-                });
-
-                message += `%0A*Total de piezas:* ${totalPieces}`;
-                message += `%0A*Monto Total:* $${totalPrice.toFixed(2)}`;
-
-                const waPhone = "584226902371";
-                const waUrl = `https://wa.me/${waPhone}?text=${message}`;
-
-                setTimeout(() => {
-                    window.open(waUrl, '_blank');
-                }, 1000);
+            }).catch(err => {
+                console.error("Error al generar el PDF:", err);
+                alert("Ocurrió un error al generar el PDF.");
             });
         }
 
-        // Inicializar Iconos al cargar
+        // ENVÍO EXCLUSIVO A WHATSAPP
+        function sendWhatsAppOnly() {
+            const name = document.getElementById('client-name').value.trim();
+            const phone = document.getElementById('client-phone').value.trim();
+            const address = document.getElementById('client-address').value.trim();
+            const payment = document.getElementById('payment-method').value;
+
+            let message = `Hola DARS SUPPLY, acabo de realizar un pedido.%0A%0A`;
+            message += `*DATOS DEL CLIENTE:*%0A`;
+            message += `• *Cliente:* ${name}%0A`;
+            message += `• *Teléfono:* ${phone}%0A`;
+            message += `• *Dirección de Envío:* ${address}%0A`;
+            message += `• *Método de Pago:* ${payment}%0A%0A`;
+            
+            message += `*DETALLE DEL PEDIDO:*%0A`;
+            let totalPieces = 0;
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                totalPieces += item.qty;
+                totalPrice += subtotal;
+                message += `• ${item.qty}x ${item.title} - $${subtotal.toFixed(2)}%0A`;
+            });
+
+            message += `%0A*Total Piezas:* ${totalPieces}`;
+            message += `%0A*Monto Total:* $${totalPrice.toFixed(2)}`;
+            message += `%0A%0A_Adjunto mi comprobante PDF descargado._`;
+
+            const waPhone = "584226902371";
+            const waUrl = `https://wa.me/${waPhone}?text=${message}`;
+
+            window.open(waUrl, '_blank');
+        }
+
+        // Inicializar interfaz al cargar la página
+        updateCartUI();
         lucide.createIcons();
     </script>
 </body>
