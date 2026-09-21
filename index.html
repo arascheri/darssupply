@@ -693,7 +693,7 @@
                     <img src="producto1.jpeg" alt="Casco con Doble Visor" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Casco con Doble Visor</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <p class="product-description">Doble visor (claro/solar), acabado mate, certificado.</p>
                         <div class="price-box">
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$47.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$42.00</span></div>
@@ -714,7 +714,7 @@
                     <img src="producto2.jpeg" alt="Set de Cuchillos de Cocina" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Set de Cuchillos de Cocina</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <p class="product-description">Acero inoxidable antiadherente, incluye tijera y pelador.</p>
                         <div class="price-box">
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$4.50</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$3.00</span></div>
@@ -735,7 +735,7 @@
                     <img src="producto9.jpeg" alt="Piscina Inflable Infantil Shuixiha" class="product-img">
                     <div class="product-content">
                         <h3 class="product-title">Piscina Inflable Infantil Shuixiha</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <p class="product-description">Medidas 130x35 cm, fondo acolchado, vinilo resistente.</p>
                         <div class="price-box">
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$17.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
@@ -751,113 +751,148 @@
                     </div>
                 </article>
 
-                <!-- Producto 13 -->
+                <!-- Producto 4 -->
                 <article class="product-card">
-                    <img src="producto13.jpeg" alt="Producto Hogar 4" class="product-img">
+                    <img src="producto13.jpeg" alt="Batidor Eléctrico Recargable" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 4</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <h3 class="product-title">Batidor Eléctrico Recargable</h3>
+                        <p class="product-description">Doble cabezal de espuma, recargable por USB, silencioso y potente. Ideal para café y malteadas.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$20.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$16.00</span></div>
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 4', 20.00)">
-                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Producto 14 -->
-                <article class="product-card">
-                    <img src="producto14.jpeg" alt="Producto Hogar 5" class="product-img">
-                    <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 5</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
-                        <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.00</span></div>
                             <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$6.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 5', 8.50)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p4', -1)">-</button>
+                            <input type="number" id="p4-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p4', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Batidor Eléctrico Recargable', 8.00, 6.00, 'p4')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
-                <!-- Producto 18 -->
+                <!-- Producto 5 -->
                 <article class="product-card">
-                    <img src="producto18.jpeg" alt="Producto Hogar 6" class="product-img">
+                    <img src="producto14.jpeg" alt="Purificador de Agua de Grifo" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 6</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <h3 class="product-title">Purificador de Agua de Grifo</h3>
+                        <p class="product-description">Filtración de 7 niveles, fácil instalación DIY. Elimina cloro, metales pesados y sedimentos. Reemplazo rápido de filtro.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$14.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$11.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$11.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.50</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 6', 14.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p5', -1)">-</button>
+                            <input type="number" id="p5-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p5', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Purificador de Agua de Grifo', 11.00, 8.50 , 'p5')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
-                <!-- Producto 22 -->
+                <!-- Producto 6 -->
                 <article class="product-card">
-                    <img src="producto22.jpeg" alt="Producto Hogar 7" class="product-img">
+                    <img src="producto18.jpeg" alt="Silla Ergo-Chic" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 7</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <h3 class="product-title">Silla Ergo-Chic</h3>
+                        <p class="product-description">Respaldo transpirable de malla de alta densidad, soporte lumbar, altura ajustable y base metálica.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$68.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$63.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 7', 18.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p6', -1)">-</button>
+                            <input type="number" id="p6-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p6', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Silla Ergo-Chic', 68.00, 63.00, 'p6')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
-                <!-- Producto 23 -->
+                <!-- Producto 7 -->
                 <article class="product-card">
-                    <img src="producto23.jpeg" alt="Producto Hogar 8" class="product-img">
+                    <img src="producto22.jpeg" alt="Mini Chopper Pro" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Hogar 8</h3>
-                        <p class="product-description">Descripción breve del producto para el hogar.</p>
+                        <h3 class="product-title">Mini Chopper Pro</h3>
+                        <p class="product-description">Recargable por USB, picador multiuso (verduras, frutas, nueces), cuchillas de acero inoxidable, diseño desmontable lavable.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$25.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$20.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$8.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$5.50</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Hogar 8', 25.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p7', -1)">-</button>
+                            <input type="number" id="p7-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p7', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Mini Chopper Pro', 8.00, 5.50, 'p7')">
+                            <i data-lucide="shopping-cart"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Producto 8 -->
+                <article class="product-card">
+                    <img src="producto23.jpeg" alt="Juego de Ratchet y Dados" class="product-img">
+                    <div class="product-content">
+                        <h3 class="product-title">Juego de Ratchet y Dados</h3>
+                        <p class="product-description">Kit de 12 piezas de 1/4", acero cromo vanadio (CR-V), alta resistencia.</p>
+                        <div class="price-box">
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$7.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$5.00</span></div>
+                        </div>
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p8', -1)">-</button>
+                            <input type="number" id="p8-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p8', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Juego de Ratchet y Dados', 7.00, 5.00, 'p8')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
                 
-                <!-- Producto 29 -->
+                <!-- Producto 9 -->
                 <article class="product-card">
-                    <img src="producto28.jpeg" alt="Producto Cabello 19" class="product-img">
+                    <img src="producto28.jpeg" alt="Rallador / Cortador Smart Drum" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 19</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <h3 class="product-title">Rallador / Cortador Smart Drum</h3>
+                        <p class="product-description">Múltiples opciones de cuchillas, orificio de entrada amplio, ventosa de silicona de alta sujeción, fácil limpieza.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$17.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$12.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$10.50</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 19', 22.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p9', -1)">-</button>
+                            <input type="number" id="p9-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p9', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Rallador / Cortador Smart Drum', 12.50, 10.50, 'p9')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
-                <!-- Producto 31 -->
+                <!-- Producto 10 -->
                 <article class="product-card">
-                    <img src="producto31.jpeg" alt="Producto Cabello 20" class="product-img">
+                    <img src="producto31.jpeg" alt="Cámara Digital para Niños" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Cabello 20</h3>
-                        <p class="product-description">Descripción breve del producto para el cabello.</p>
+                        <h3 class="product-title">Cámara Digital para Niños</h3>
+                        <p class="product-description">Diseño antigolpes, pantalla LCD, filtros divertidos integrados para fotos.</p>
                         <div class="price-box">
                             <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$7.50</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Cabello 20', 10.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p10', -1)">-</button>
+                            <input type="number" id="p10-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p10', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Cámara Digital para Niños', 10.00, 8.00, 'p10')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
@@ -871,66 +906,81 @@
             <div class="products-grid">
                 <!-- Producto 11 -->
                 <article class="product-card">
-                    <img src="producto11.jpeg" alt="Producto Tecnología 9" class="product-img">
+                    <img src="producto11.jpeg" alt="Compressor de Aire Digital Portátil" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 9</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <h3 class="product-title">Compressor de Aire Digital Portátil</h3>
+                        <p class="product-description">Pantalla digital, apagado automático, recargable/conexión 12V y cable USB. Para autos, motos y bicicletas.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$15.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$12.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$17.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
                         </div>
                         <div class="product-qty-selector">
-                            <button class="btn-card-qty" onclick="adjustCardQty('p9', -1)">-</button>
-                            <input type="number" id="p9-qty" class="card-qty-input" value="1" min="1" readonly>
-                            <button class="btn-card-qty" onclick="adjustCardQty('p9', 1)">+</button>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p11', -1)">-</button>
+                            <input type="number" id="p11-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p11', 1)">+</button>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 9', 15.00, 'p9')">
+                        <button class="btn-add-cart" onclick="addToCart('Compressor de Aire Digital Portátil', 17.00, 14.00, 'p11')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
                 <!-- Producto 12 -->
                 <article class="product-card">
-                    <img src="producto12.jpeg" alt="Producto Tecnología 10" class="product-img">
+                    <img src="producto12.jpeg" alt="Cinta LED RGB Multicolor" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 10</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <h3 class="product-title">Cinta LED RGB Multicolor</h3>
+                        <p class="product-description">Incluye control remoto, variedad de colores y efectos. Fácil instalación adhesiva. Ideal para habitaciones y muebles.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$22.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$18.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$10.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$8.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 10', 22.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p12', -1)">-</button>
+                            <input type="number" id="p12-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p12', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Cinta LED RGB Multicolor', 10.00, 8.00, 'p12')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
-                <!-- Producto 16 -->
+                <!-- Producto 13 -->
                 <article class="product-card">
-                    <img src="producto16.jpeg" alt="Producto Tecnología 11" class="product-img">
+                    <img src="producto16.jpeg" alt="Cargador para Auto M4 5 en 1" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 11</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <h3 class="product-title">Cargador para Auto M4 5 en 1</h3>
+                        <p class="product-description">Carga simultánea de hasta 5 dispositivos. Incluye adaptadores intercambiables (EE.UU., RU, Europa) y cable de 700mm.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$30.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$24.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$11.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$9.50</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 11', 30.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p13', -1)">-</button>
+                            <input type="number" id="p13-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p13', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Cargador para Auto M4 5 en 1', 11.00, 9.50, 'p13')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
                 </article>
 
-                <!-- Producto 3 -->
+                <!-- Producto 14 -->
                 <article class="product-card">
-                    <img src="producto3.jpeg" alt="Producto Tecnología 12" class="product-img">
+                    <img src="producto3.jpeg" alt="Combo Smartwatch + Audífonos" class="product-img">
                     <div class="product-content">
-                        <h3 class="product-title">Producto Tecnología 12</h3>
-                        <p class="product-description">Descripción breve del producto de tecnología.</p>
+                        <h3 class="product-title">Combo Smartwatch + Audífonos</h3>
+                        <p class="product-description">Pantalla Big AMOLED + Headphones ZT 4 en 1.</p>
                         <div class="price-box">
-                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$18.00</span></div>
-                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$14.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Detal:</span><span class="price-value-detal">$20.00</span></div>
+                            <div class="price-row"><span class="price-label">Precio Mayor:</span><span class="price-value-mayor">$18.00</span></div>
                         </div>
-                        <button class="btn-add-cart" onclick="addToCart('Producto Tecnología 12', 18.00)">
+                        <div class="product-qty-selector">
+                            <button class="btn-card-qty" onclick="adjustCardQty('p14', -1)">-</button>
+                            <input type="number" id="p14-qty" class="card-qty-input" value="1" min="1" readonly>
+                            <button class="btn-card-qty" onclick="adjustCardQty('p14', 1)">+</button>
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart('Combo Smartwatch + Audífonos', 20.00. 18.00, 'p14')">
                             <i data-lucide="shopping-cart"></i> Agregar al Carrito
                         </button>
                     </div>
